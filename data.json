@@ -1,0 +1,39 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "gaurav patil",
+      "mobile": "7894578945",
+      "email": "gaurav@gmail.com",
+      "password": "gaurav25",
+      "data": [
+        {
+          "name": "gaurav patil",
+          "phone": "8292564657",
+          "aadhar": "568974123654",
+          "email": "gaurav25@gmail.com",
+          "flatType": "1rk",
+          "budget": "₹10L - ₹15L",
+          "id": 1
+        },
+        {
+          "name": "rahul",
+          "phone": "8292564657",
+          "aadhar": "568974123623",
+          "email": "rahul25@gmail.com",
+          "flatType": "1rk",
+          "budget": "₹10L - ₹15L",
+          "id": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "username": "aditya chavan",
+      "mobile": "1234567891",
+      "email": "aditya1402@gmail.com",
+      "password": "1234",
+      "data": []
+    }
+  ]
+}
