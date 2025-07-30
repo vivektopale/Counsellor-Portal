@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #12d25c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #10b14e;
+        }
+
+        p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Register</h2>
+    <form id="registerForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="tel" id="mobile" placeholder="Mobile Number" required pattern="[0-9]{10}">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+        <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <a href="./login.html">Login here</a></p>
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value.trim();
+            const mobile = document.getElementById("mobile").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const confirmPassword = document.getElementById("confirmPassword").value.trim();
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                return;
+            }
+
+            fetch("/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, mobile, email, password }),
+            })
+            .then(response => {
+                if (response.status === 400) {
+                    alert("Email already exists! Please use a different email.");
+                } else if (response.ok) {
+                    alert("Registration successful!");
+                    window.location.href = "./login.html";
+                } else {
+                    alert("Registration failed! Please try again.");
+                }
+            })
+            .catch(error => console.error("Error during registration:", error));
+        });
+    </script>
+</div>
+</body>
+</html>

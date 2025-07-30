@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <style>
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family:Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .main {
+            display: flex;
+            height: 97%;
+            width: 97%;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0px 2px 10px rgb(149, 147, 147);
+        }
+
+        /* Left Sidebar Styles */
+        .sidebar {
+            width: 20%;
+            background-color: #010202;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 5%;
+            box-shadow: 1px 1px 5px red;
+            border-radius: 20px;
+        }
+
+        .sidebar h2 {
+            margin: 0;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #f8f9fa;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            display: flex;
+            flex-direction: column;
+            padding: 15px 0px;
+            border: 1px solid black;
+            text-align: center;
+            transition: 0.3s linear;
+            text-shadow: 1px 1px 2px rgb(252, 54, 54);
+        }
+
+        .sidebar a:first-child {
+            border: 1px solid white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 1px 1px 8px red;
+            color: red;
+            text-shadow: 1px 1px 1px white;
+        }
+
+        .sidebar a:hover {
+            border: 1px solid white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 1px 1px 8px red;
+            color: red;
+            text-shadow: 1px 1px 1px white;
+        }
+        .sidebar a:last-child{
+            border:none;
+            color:red;
+            box-shadow: none;
+        }
+        .sidebar a:last-child:hover {
+            color: white;
+            border: none;
+            box-shadow: none;
+        }
+
+        /* Right Content Styles */
+        .content {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background-color: white;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            position: relative;
+        }
+
+        .content img {
+            width: 450px;
+            height: 450px;
+            position: relative;
+        }
+        .content h1 {
+            font-size: 85px;
+            color: #343a40;
+            margin-bottom: 20px;
+            text-align: center;
+            position: absolute;
+            top: 25%;
+        }
+        .content span {
+            color: red;
+        }
+
+        .content p {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #9ba2a8;
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .content ul {
+            margin-top: 20px;
+            padding-left: 20px;
+            text-align: center;
+        }
+
+        .content ul li {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        #agent {
+            position: absolute;
+            top: 0%;
+            right: 3%;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <a href="#" onclick="checkLogin()">Home</a>
+            <a href="./home.html" onclick="checkLogin()">Client Details</a>
+            <a href="./terms and conditions.html" onclick="checkLogin()">Terms and Conditions</a>
+            <a href="#" onclick="checkLogin()">Contact Us</a>
+            <a id="loginOption" href="./login.html">Login</a>
+        </div>
+
+        <!-- Right Content Section -->
+        <div class="content">
+            <p id="agent"><b>Agent:</b> Not Loged</p>
+            <img src="./client.png" alt="">
+            <h1>Wel<span>come to Gu</span>est Regi<span>stration Sy</span>stem</h1>
+            <p>
+                The user-friendly solution designed to streamline the process of managing
+                client information.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let isLoggedIn = false;
+
+        // Fetch login status from the server
+        fetch("/status")
+            .then(response => response.json())
+            .then(data => {
+                const loginOption = document.getElementById("loginOption");
+                const agent = document.getElementById("agent");
+
+                if (data.loggedIn) {
+                    isLoggedIn = true; // Update login status
+                    loginOption.innerHTML = `<a href="#" onclick="logout()">Logout</a>`;
+                    agent.innerHTML = `<b>Agent:</b> ${data.username}`;
+                }
+            });
+
+        // Function to check if user is logged in
+        function checkLogin() {
+            if (!isLoggedIn) {
+                alert("Please log in first!");
+                event.preventDefault(); // Prevent link navigation
+            }
+        }
+
+        // Logout function
+        function logout() {
+            fetch("/logout", {
+                method: "POST",
+            }).then(() => {
+                alert("Logged out successfully!");
+                window.location.href = "./index.html";
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Client</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgb(180, 179, 179);
+        }
+
+        h1 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            outline: none;
+            background-color: #ffffff;
+        }
+        input{
+            width: 96%;
+        }
+
+        input:focus, select:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 4px rgba(128, 189, 255, 0.5);
+        }
+
+        button {
+            padding: 12px;
+            font-size: 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <h1>Update Client</h1>
+    <form id="updateForm">
+        <input type="hidden" id="id" name="id">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required>
+        
+        <label for="aadhar">Aadhar Card Number:</label>
+        <input type="text" id="aadhar" name="aadhar" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="flatType">Flat Type:</label>
+        <select id="flatType" name="flatType" required>
+            <option value="1rk">1 RK</option>
+            <option value="1bhk">1 BHK</option>
+            <option value="2bhk">2 BHK</option>
+            <option value="3bhk">3 BHK</option>
+            <option value="4bhk">4 BHK</option>
+        </select>
+        
+        <label for="budget">Budget:</label>
+        <select id="budget" name="budget" required>
+            <option value="₹10L - ₹15L">₹10L - ₹15L</option>
+            <option value="₹15L - ₹35L">₹15L - ₹35L</option>
+            <option value="₹35L - ₹50L">₹35L - ₹50L</option>
+            <option value="₹50L - ₹75L">₹50L - ₹75L</option>
+            <option value="₹75L - ₹1Cr">₹75L - ₹1Cr</option>
+            <option value="₹1Cr - ₹3Cr">₹1Cr - ₹3Cr</option>
+            <option value="₹3Cr Onwards">₹3Cr Onwards</option>
+        </select>
+        
+        <button type="submit">Update</button>
+    </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const contactId = urlParams.get('id');
+        console.log("Contact ID from query string:", contactId);
+
+        // Fetch contact details and populate form
+        fetch(`/contacts/${contactId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch contact details. Please check if the ID is correct.");
+                }
+                return response.json();
+            })
+            .then(contact => {
+                console.log("Fetched contact:", contact);
+                document.getElementById('id').value = contact.id;
+                document.getElementById('name').value = contact.name;
+                document.getElementById('phone').value = contact.phone;
+                document.getElementById('aadhar').value = contact.aadhar;
+                document.getElementById('email').value = contact.email;
+                document.getElementById('flatType').value = contact.flatType;
+                document.getElementById('budget').value = contact.budget;
+            })
+            .catch(err => {
+                console.error('Failed to fetch contact details:', err);
+                alert("Error: Unable to load contact details. Ensure the contact ID is valid.");
+            });
+
+        // Handle update submission
+        document.getElementById('updateForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const updatedData = {
+                id: document.getElementById('id').value,
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                aadhar: document.getElementById('aadhar').value,
+                email: document.getElementById('email').value,
+                flatType: document.getElementById('flatType').value,
+                budget: document.getElementById('budget').value,
+            };
+
+            console.log("Data being sent for update:", updatedData);
+
+            await fetch('/update-contact', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to update contact.");
+                }
+                return response.text();
+            })
+            .then(message => {
+                console.log("Response from server:", message);
+                alert(message);
+                window.location.href = './home.html';
+            })
+            .catch(err => {
+                console.error("Error updating contact:", err);
+                alert("Error: Failed to update contact. Please try again later.");
+            });
+        });
+    </script>
+</div>
+</body>
+</html>
